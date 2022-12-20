@@ -6,6 +6,7 @@ import HandTrackingModule as htm
 import time
 import autopy
 import CameraPositionEvent
+import TestServer2
 ##################################
 wCam, hCam = 640, 480
 frameR = 100 # Frame Reduction
@@ -21,6 +22,8 @@ cap.set(4, 480)
 detector = htm.handDetector(maxHands= 1)
 wSrc, hSrc = autopy.screen.size()
 #print(wSrc, hSrc)
+# 서버 시작해놓고 루프문 진입
+TestServer2.StratServer()
 
 while True:
     # 1. Find hand landmarks
@@ -35,8 +38,8 @@ while True:
 
         #print("HS LOG 1 ----- x1:{0} y1:{1} / x2:{2} y2:{3}".format(x1,y1,x2,y2))
         caPos = CameraPositionEvent.CameraPosEvent(x1,y1,x2,y2)
-        print("HS LOG 1 ----- "+caPos.getDataFormat(0))
-
+        #print("HS LOG 1 ----- "+caPos.getDataFormat(0))
+        TestServer2.SendMessageAllClinet(caPos.getDataFormat(0))
         # 2. Get tip of the index and middle finger
         # 3. Chaeck which fingers are up
         fingers = detector.fingersUp()

@@ -1,8 +1,8 @@
 import socket
 from _thread import *
-
+import threading
 client_sockets = []  # 서버에 접속한 클라이언트 목록
-
+nowServerRunning = False
 # 쓰레드에서 실행되는 코드입니다.
 # 접속한 클라이언트마다 새로운 쓰레드가 생성되어 통신을 하게 됩니다.
 def threaded(client_socket, addr):
@@ -43,6 +43,7 @@ def threaded(client_socket, addr):
 
 
 def serverStart():
+    nowServerRunning = True
     # 서버 IP 및 열어줄 포트
     HOST = '127.0.0.1'
     PORT = 8888
@@ -59,7 +60,10 @@ def serverStart():
 
             client_socket, addr = server_socket.accept()
             client_sockets.append(client_socket)
-            start_new_thread(threaded, (client_socket, addr))
+            #start_new_thread(threaded, (client_socket, addr))
+            t2 = threading.Thread(target=threaded,args=(client_socket, addr))
+            t2.daemon = True
+            t2.start()
             print("참가자 수 : ", len(client_sockets))
 
     except Exception as e:
@@ -67,7 +71,27 @@ def serverStart():
 
     finally:
         server_socket.close()
-1
+        nowServerRunning = False
+
+# (중요) 서버 시작점
+def StratServer():
+    t1 = threading.Thread(target=serverStart,args=())
+    t1.daemon = True
+    t1.start()
+    #start_new_thread(serverStart, ())
+
+# 모든 접속중인 클라이언트한테 메시지 전송하기
+# MSG는 String 값
+# 단, 접속중인 클라가 없거나 서버가 동작중이 아니면 음수 리턴 / 잘 전송하면 1 리턴
+def SendMessageAllClinet(msg):
+
+    if(len(client_sockets) <= 0):
+        print("ERROR : NO HAS CONNECTED CLIENT")
+        return -2
+    for client in client_sockets:
+        client.send(msg.encode())
+    return 1
+
 
 if __name__ == '__main__':
     start_new_thread(serverStart,())
