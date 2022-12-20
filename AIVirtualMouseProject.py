@@ -5,6 +5,7 @@ import numpy as np
 import HandTrackingModule as htm
 import time
 import autopy
+import CameraPositionEvent
 ##################################
 wCam, hCam = 640, 480
 frameR = 100 # Frame Reduction
@@ -31,7 +32,10 @@ while True:
         x1, y1 = lmList[8][1:]
         x2, y2 = lmList[12][1:]
 
-        #print(x1, y1, x2, y2)
+
+        #print("HS LOG 1 ----- x1:{0} y1:{1} / x2:{2} y2:{3}".format(x1,y1,x2,y2))
+        caPos = CameraPositionEvent.CameraPosEvent(x1,y1,x2,y2)
+        print("HS LOG 1 ----- "+caPos.getDataFormat(0))
 
         # 2. Get tip of the index and middle finger
         # 3. Chaeck which fingers are up
@@ -61,6 +65,8 @@ while True:
             if length < 40:
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 #autopy.mouse.click()
+
+
 
     # 11. Frame rate
     cTime = time.time()
