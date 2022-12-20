@@ -48,7 +48,7 @@ while True:
             clocY = plocY + (y3 - plocY) / smoothening
 
             # 7. Move Mouse
-            autopy.mouse.move(wSrc - clocX, clocY)
+            #autopy.mouse.move(wSrc - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 0), cv2.FILLED)
             plocX, plocY = clocX, clocY
 
@@ -60,7 +60,7 @@ while True:
             # 10. Click mouse if distance are short
             if length < 40:
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
-                autopy.mouse.click()
+                #autopy.mouse.click()
 
     # 11. Frame rate
     cTime = time.time()
