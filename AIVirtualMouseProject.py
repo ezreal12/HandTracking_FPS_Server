@@ -24,22 +24,30 @@ wSrc, hSrc = autopy.screen.size()
 #print(wSrc, hSrc)
 # 서버 시작해놓고 루프문 진입
 TestServer2.StratServer()
-
+# 마지막으로 추적했던 손 위치 정보 : CameraPosEvent로 저장됨.
+lastHandPos = None
 while True:
     # 1. Find hand landmarks
     success, img = cap.read()
     img = detector.findHands(img)
     lmList , bbox = detector.findPosition(img)
-
+    # !! 221221 : 하다말았음. 클라쪽 수정해라
     if len(lmList) != 0:
         x1, y1 = lmList[8][1:]
         x2, y2 = lmList[12][1:]
 
-
-        #print("HS LOG 1 ----- x1:{0} y1:{1} / x2:{2} y2:{3}".format(x1,y1,x2,y2))
         caPos = CameraPositionEvent.CameraPosEvent(x1,y1,x2,y2)
-        #print("HS LOG 1 ----- "+caPos.getDataFormat(0))
-        TestServer2.SendMessageAllClinet(caPos.getDataFormat(0))
+
+
+        if(lastHandPos != None):
+            caPos.setDiff(lastHandPos.x2,lastHandPos.y2)
+            sendMsg = caPos.getDataFormat(0)
+            if(sendMsg != None):
+                TestServer2.SendMessageAllClinet(sendMsg) # 서버 전송부분
+            print("HS LOG 1 ----- " + caPos.getDataFormat(0))
+
+        lastHandPos = caPos
+
         # 2. Get tip of the index and middle finger
         # 3. Chaeck which fingers are up
         fingers = detector.fingersUp()
@@ -69,7 +77,9 @@ while True:
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 #autopy.mouse.click()
 
-
+    else:
+        # 마지막 손 위치 정보 리셋
+        lastHandPos = None
 
     # 11. Frame rate
     cTime = time.time()
