@@ -29,6 +29,13 @@ class handDetector():
                                                self.mpHands.HAND_CONNECTIONS)
         return img
 
+    # HS : 찾아낸 손 갯수를 리턴함. 1개면 1 없으면 0
+    def getDetecedHandsCount(self):
+        if(self.results.multi_hand_landmarks != None):
+            return len(self.results.multi_hand_landmarks)
+        else:
+            return -1
+
     def findPosition(self, img, handNo=0, draw=True):
 
         xList = []

@@ -26,6 +26,11 @@ wSrc, hSrc = autopy.screen.size()
 TestServer2.StratServer()
 # 마지막으로 추적했던 손 위치 정보 : CameraPosEvent로 저장됨.
 lastHandPos = None
+
+# 개선사항 1. OPenCV 카메라 60프레임  설정
+# 2. 메시지 전송할때 1회성스레드 이용
+# 3. 카메라 좌우반전 대칭적용
+
 while True:
     # 1. Find hand landmarks
     success, img = cap.read()
