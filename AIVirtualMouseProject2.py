@@ -1,4 +1,8 @@
-import cv2
+
+
+
+# ---- 230104 : 양손 컨트롤제 일단 드롭.
+#import cv2
 smoothening = 5
 ##################################
 import numpy as np
