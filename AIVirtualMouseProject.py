@@ -52,8 +52,12 @@ while True:
         if (lastHandPos != None):
             # 4. Only Inder fingers : Moving mode
             caPos.setDiff(lastHandPos.x2, lastHandPos.y2)
-            if fingers[1] == 1:
-                sendMsg = caPos.getDataFormat(1)
+            if (fingers[1] == 1) and (fingers[2] == 1):
+                sendMsg = caPos.getDataFormat(3) # 3은 검지 중지 다들고있는상태 클라에선 동시에 처리할것
+            elif fingers[2] == 1:
+                sendMsg = caPos.getDataFormat(2) # 2는 중지만 들고있는 FAQ 상태
+            elif fingers[1] == 1:
+                sendMsg = caPos.getDataFormat(1) # 1은 검지만 들고잇는 상태ㅁ
             else:
                 sendMsg = caPos.getDataFormat(0)
             print(sendMsg)
